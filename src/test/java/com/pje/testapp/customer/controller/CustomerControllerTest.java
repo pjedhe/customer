@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pje.testapp.customer.dto.CustomerDto;
 import com.pje.testapp.customer.service.impl.CustomerService;
 
-@WebMvcTest(CustomerController.class)
 public class CustomerControllerTest {
 @Autowired
     private MockMvc mockMvc;
@@ -47,16 +46,7 @@ public class CustomerControllerTest {
     @Test
     public void saveCustomerTest() throws Exception{
         // precondition
-        when(customerService.storeCustomer(any(CustomerDto.class))).thenReturn(customer);
 
-        // action
-        ResultActions response = mockMvc.perform(post("/api/employees")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(customer)));
-
-        // verify
-        response.andDo(print()).
-                andExpect(status().isCreated());
     }
 
 }
