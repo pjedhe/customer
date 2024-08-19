@@ -1,36 +1,36 @@
 package com.pje.testapp.customer.controller;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import org.junit.jupiter.api.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import com.pje.testapp.customer.dto.CustomerDto;
+import com.pje.testapp.customer.dto.ResponseDto;
 import com.pje.testapp.customer.service.impl.CustomerService;
 
+@ExtendWith(MockitoExtension.class)
 public class CustomerControllerTest {
-@Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
+
+    @Mock
     private CustomerService customerService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private CustomerController customerController;
 
     CustomerDto customer;
 
@@ -45,7 +45,27 @@ public class CustomerControllerTest {
 
     @Test
     public void saveCustomerTest() throws Exception{
-        // precondition
+        MockHttpServletRequest request =  new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        
+        when(customerService.storeCustomer(customer)).thenReturn(customer);
+
+        ResponseEntity<ResponseDto> responseEntity = customerController.createCustomer(customer);
+        assertEquals(responseEntity.getStatusCode(), HttpStatus.CREATED);
+    }
+    
+
+    @SuppressWarnings("null")
+    @Test
+    public void fetchCustomerTest() throws Exception{
+        MockHttpServletRequest request =  new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        
+        when(customerService.getCustomer(customer.getCustomerReference())).thenReturn(customer);
+
+        ResponseEntity<CustomerDto> responseEntity = customerController.fetchAccountDetails(customer.getCustomerReference());
+        assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+        assertEquals(responseEntity.getBody().getCustomerName(), customer.getCustomerName());
 
     }
 
