@@ -32,7 +32,7 @@ public class CustomerController {
     private ICustomerService iCustomerService;
 
     @Operation(
-            summary = "Create Account REST API",
+            summary = "Create Customer REST API",
             description = "REST API to create new Customer"
     )
     @ApiResponses({
@@ -41,8 +41,8 @@ public class CustomerController {
                     description = "HTTP Status CREATED"
             ),
             @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
+                    responseCode = "400",
+                    description = "HTTP Status Bad Request",
                     content = @Content(
                             schema = @Schema(implementation = ErrorResponseDto.class)
                     )
@@ -58,7 +58,7 @@ public class CustomerController {
     } 
 
     @Operation(
-            summary = "Fetch Account Details REST API",
+            summary = "Fetch Customer Details REST API",
             description = "REST API to fetch Customer  details based on Customer Reference"
     )
     @ApiResponses({
@@ -67,8 +67,8 @@ public class CustomerController {
                     description = "HTTP Status OK"
             ),
             @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
+                    responseCode = "404",
+                    description = "HTTP Status Resource Not found",
                     content = @Content(
                             schema = @Schema(implementation = ErrorResponseDto.class)
                     )
@@ -76,7 +76,7 @@ public class CustomerController {
     }
     )
     @GetMapping("/fetch")
-    public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam
+    public ResponseEntity<CustomerDto> fetchCustomerDetails(@RequestParam
                                                                String customerReferance) {
         CustomerDto customerDto = iCustomerService.getCustomer(customerReferance);
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);

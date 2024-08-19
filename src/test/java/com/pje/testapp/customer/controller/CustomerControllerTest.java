@@ -63,7 +63,7 @@ public class CustomerControllerTest {
         
         when(customerService.getCustomer(customer.getCustomerReference())).thenReturn(customer);
 
-        ResponseEntity<CustomerDto> responseEntity = customerController.fetchAccountDetails(customer.getCustomerReference());
+        ResponseEntity<CustomerDto> responseEntity = customerController.fetchCustomerDetails(customer.getCustomerReference());
         assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
         assertEquals(responseEntity.getBody().getCustomerName(), customer.getCustomerName());
 
